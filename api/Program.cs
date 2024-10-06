@@ -1,4 +1,5 @@
 using api.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<StoreContext>(opt=>
 {opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+builder.Services.AddCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,7 +28,10 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseAuthorization();
-
+app.UseCors(
+    options => {
+        options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000") ; }
+);
 app.MapControllers();
 
 var scope= app.Services.CreateScope ();
