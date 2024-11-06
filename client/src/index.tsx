@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './App/Layout/Styles.css'
 import '@fontsource/roboto/300.css';
@@ -9,15 +8,16 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './App/Router/router.tsx';
 import { Provider } from 'react-redux';
 import { store } from './App/store/configurestore.ts';
+import React from 'react';
 
 // const root=ReactDOM.createRoot(
 //   document.getElementById('root') as HTMLElement
 // )
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <React.StrictMode>
       <Provider store={store}>
     <RouterProvider router={router}/>
     </Provider>
-  </StrictMode>,
+  </React.StrictMode>
 )

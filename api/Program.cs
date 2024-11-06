@@ -1,8 +1,12 @@
+using System.Text;
 using api.Data;
 using api.Enitites;
+using api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +19,18 @@ builder.Services.AddDbContext<StoreContext>(opt=>
 {opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddCors();
-builder.Services.AddIdentityCore<User>().AddRoles<IdentityRole>().AddEntityFrameworkStores<StoreContext>();
-builder.Services.AddAuthentication();
+builder.Services.AddIdentityCore<User>().AddRoles<Role>().AddEntityFrameworkStores<StoreContext>();
+builder.Services.AddScoped<TokenServices>();    
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt=>{
+     opt.TokenValidationParameters=new TokenValidationParameters{
+            ValidateIssuer=false,
+            ValidateAudience=false,
+            ValidateLifetime=true,
+            ValidateIssuerSigningKey=true,
+            IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.
+            GetBytes(builder.Configuration["JWTSettings:TokenKey"])),
+    };
+});
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -32,15 +46,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors(
     options => {
-        options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000") ; }
+        options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials() ; }
 );
 app.MapControllers();
 
-var scope= app.Services.CreateScope ();
+var scope= app.Services.CreateScope();
 
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
 var userManager=scope.ServiceProvider.GetRequiredService<UserManager<User>>();

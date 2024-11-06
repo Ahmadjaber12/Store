@@ -15,7 +15,7 @@ namespace api.Controllers
             return NotFound();
         }
 
-         [HttpGet("UnAuthorized")]
+         [HttpGet("Unauthorized")]
         public ActionResult UnAuthorized()
         {
             return Unauthorized();

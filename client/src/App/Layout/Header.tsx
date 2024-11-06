@@ -2,6 +2,7 @@ import { AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typogr
 import { Link, NavLink } from "react-router-dom";
 import {ShoppingCart} from '@mui/icons-material';
 import { useAppSelector } from "../store/configurestore";
+import SignInUser from "./sinInUser";
 const midLinks=[
     {title:'catalog',path:'/catalog'},
     {title:'about',path:'/about'},
@@ -31,7 +32,8 @@ interface Props{
 
 export default function Header({darkmode , handleThemeChange}:Props){
     const {basket}=useAppSelector(state=> state.basket);
-    const countItems=basket?.items.reduce((sum,item)=>sum+item.quentity,0);
+    const {user}=useAppSelector(state=> state.account);
+    const countItems=basket?.items?.reduce((sum,item)=>sum+item.quentity,0);
     return (
         <AppBar position='static' sx={{mb:4}}>
                      
@@ -60,18 +62,23 @@ export default function Header({darkmode , handleThemeChange}:Props){
                         <ShoppingCart />
                     </Badge>
                 </IconButton>
-                <List sx={{display:"flex"}}>
-                {rightLinks.map(({title,path})=>
-                        <ListItem 
-                            component={NavLink}
-                            to={path}
-                            key={path}
-                            sx={NavStyles}
-                        >
-                            {title.toUpperCase()}
-                        </ListItem>
-                )}
-                </List>
+                {user ? (
+                    <SignInUser/>
+                ): (<List sx={{display:"flex"}}>
+                    {rightLinks.map(({title,path})=>
+                            <ListItem 
+                                component={NavLink}
+                                to={path}
+                                key={path}
+                                sx={NavStyles}
+                            >
+                                {title.toUpperCase()}
+                            </ListItem>
+                    )}
+                    </List>)
+                
+                }
+                
                 </Box>
             </Toolbar>
         </AppBar>

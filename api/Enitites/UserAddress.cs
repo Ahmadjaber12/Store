@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 
 namespace api.Enitites
 {
-    public class User:IdentityUser<int>
+    public class UserAddress: Address
     {
-        public UserAddress userAddress{ get; set; }
+        public int Id { get; set; }
     }
 }

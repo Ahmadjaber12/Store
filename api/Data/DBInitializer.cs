@@ -13,13 +13,13 @@ namespace api.Data
                     UserName = "bob",
                     Email = "bob@test.com"
                 };
-                await userManager.CreateAsync(user, "ahmad");
+                await userManager.CreateAsync(user, "Pa$$word1");
                 await userManager.AddToRoleAsync(user,"Member");
                 var admin=new User{
                     UserName = "admin",
                     Email = "admin@test.com"
                 };
-                await userManager.CreateAsync(admin,"Pa$$word");
+                await userManager.CreateAsync(admin,"Pa$$word1");
                 await userManager.AddToRolesAsync(admin, new[] {"Member","Admin"});
 
             }

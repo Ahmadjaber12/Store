@@ -2,11 +2,22 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../Router/router";
 import { PaginatResponse } from "../Models/Pagination";
+import { store } from "../store/configurestore";
 
 axios.defaults.baseURL='http://localhost:5235';
 
-axios.defaults.withCredentials=false
+//axios.defaults.withCredentials=true
 
+
+
+axios.interceptors.request.use(config => {
+    const token=store.getState().account.user?.token;
+    if(token){ 
+        config.headers.Authorization=`Bearer ${token}`
+        config.withCredentials=true
+            };
+    return config;
+})
 const sleep=()=> new Promise(resolve=>setTimeout(resolve,600));
 const responseBody=(response:AxiosResponse)=> response.data;
 
@@ -22,7 +33,9 @@ axios.interceptors.response.use(async response =>{
 }    
 return response
 },(error:AxiosError)=> {
-    const {data,status}=error.response as AxiosResponse;
+    if(error.response)
+   { 
+        const {data,status}=error.response as AxiosResponse;
     switch(status){
         case 400:
             if(data.errors){
@@ -39,7 +52,7 @@ return response
             toast.error(data.title);
             break;
         case 401:
-            toast.error(data.title);
+            toast.error(data.title || "Unauthorised");
             break;
         case 404:
             toast.error(data.title);
@@ -49,7 +62,9 @@ return response
             break;
         default:
             break;
-    }
+    }}
+    else
+    toast.error("Network error");
     return Promise.reject(error.response);
 })
 const requests={
@@ -63,7 +78,7 @@ const requests={
 
 const Errors={
     get400Error:()=>requests.get('/api/buggy/bad-request'),
-    get401Error:()=>requests.get('/api/buggy/UnAuthorized'),
+    get401Error:()=>requests.get('/api/buggy/Unauthorized'),
     get404Error:()=>requests.get('/api/buggy/NotFound'),
     get500Error:()=>requests.get('/api/buggy/Server-Error'),
     getValidationError:()=>requests.get('/api/buggy/Validation-Error')
@@ -72,18 +87,36 @@ const Errors={
 const catalog={
     list:(params:URLSearchParams)=>requests.get('/products/filter',params),
     details:(id:number)=>requests.get(`/products/${id}`),
-    filtersfetch:()=>requests.get("products/filters")
+    filtersfetch:()=>requests.get("/products/filters")
 }
 const Basket={
     get:()=>requests.get("/baskets"),
     addItem:(productId:number,quentity=1)=>requests.post(`/baskets?productId=${productId}&quentity=${quentity}`,{}),
     RemoveItem:(productId:number,quentity=1)=>requests.delete(`/baskets?productId=${productId}&quentity=${quentity}`),
 }
+const Account={
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    login:(values:any)=>requests.post("/account/login",values),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    register:(values:any)=>requests.post("/account/register",values),
+    currentUser:()=>requests.get("/account/CurrentUser")
+}
+
+const orders={
+    list:()=> requests.get("/api/orders"),
+    fetch:(id:number)=>requests.get(`api/orders/${id}`),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    create:(values:any)=>requests.post('api/orders',values),
+    fetchAddress:()=>requests.get(`account/savedAddress`),
+
+}
 
 const agent={
     catalog,
     Errors,
-    Basket
+    Basket,
+    Account,
+    orders
 }
 
 export default agent;
