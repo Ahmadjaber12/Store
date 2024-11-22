@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import agent from "../../App/api/agent";
 import LoadingComponent from "../../App/Layout/loadingComponent";
 import { order } from "../../App/Models/order";
+import OrderDetail from "./OrdersDetailed";
 
 export default function Orders(){
     const [orders,setOrders]=useState<order[] | null>(null);
     const [loading,setLoading]=useState(true);
+    const [SelectedOrderNumber,setSelectedOrderNumber]=useState(0);
 
     useEffect(()=>{
         agent.orders.list()
@@ -15,7 +17,13 @@ export default function Orders(){
         .finally(()=>setLoading(false))
     },[])
     if(loading) return <LoadingComponent message="Loading Orders"/>
-    
+    if(SelectedOrderNumber > 0) 
+      return (
+          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+          <OrderDetail order={orders?.find(o=>o.id === SelectedOrderNumber)!} 
+              setSelectedOrder={setSelectedOrderNumber}
+          />
+      )
     return (
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -41,7 +49,7 @@ export default function Orders(){
                 <TableCell align="right">{order.dateTime.split('T')[0]}</TableCell>
                 <TableCell align="right">{order.orderStatus}</TableCell>
                 <TableCell align="right">
-                    <Button>View</Button>
+                    <Button onClick={()=> setSelectedOrderNumber(order.id)}>View</Button>
                 </TableCell>
               </TableRow>
             ))}

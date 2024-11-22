@@ -75,7 +75,8 @@ namespace api.Controllers
                 BuyerId=User.Identity.Name,
                 Shipping=orderdto.shipping,
                 SubTotal=SubTotal,
-                DeliveryFree=DeliveryFree
+                DeliveryFree=DeliveryFree,
+                PaymentIntentId=basket.PaymentIntentId
             };
             _context.orders.Add(order);
             _context.Baskets.Remove(basket);

@@ -9,6 +9,10 @@ namespace api.Enitites
             public string BuyerId {set; get;}
 
             public List<BasketItem> Items {get; set;}=new();
+
+            public string PaymentIntentId {set; get;}
+
+            public string ClientSecret {set; get;}
  
             public void AddItem(int Quentity,Product product){
                 

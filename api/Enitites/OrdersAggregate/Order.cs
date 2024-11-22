@@ -22,7 +22,9 @@ namespace api.Enitites.OrdersAggregate
 
         public long DeliveryFree { get; set; }
 
-        public OrderStatus orderStatus{ get; set; }=OrderStatus.Pending;
+        public string PaymentIntentId { set; get; }
+
+        public OrderStatus OrderStatus{ get; set; }=OrderStatus.Pending;
 
         public long GetTotal (){
             

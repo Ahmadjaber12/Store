@@ -8,11 +8,9 @@ export const validationSchema=[yup.object({
     state:yup.string().required(),
     country:yup.string().required(),
 
-
-
 }),
     yup.object(),
     yup.object({
-        cardName:yup.string().required(),
+        cardName:yup.string().required()
     })
 ]

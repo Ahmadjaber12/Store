@@ -18,7 +18,7 @@ namespace api.Extentions
                             Shipping=x.Shipping,
                             DeliveryFree=x.DeliveryFree,
                             SubTotal=x.SubTotal,
-                            orderStatus=x.orderStatus.ToString(),
+                            orderStatus=x.OrderStatus.ToString(),
                             Total=x.GetTotal(),
                             Items=x.Items.Select(item => new OrderItemDto{
                                 ProductId=item.ItemOrdered.ProductId,

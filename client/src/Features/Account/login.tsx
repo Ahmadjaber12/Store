@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Avatar, Container, Grid, Paper } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FieldValues, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { useAppDispatch } from '../../App/store/configurestore';
@@ -13,14 +13,14 @@ import { signInUser } from './accountSlice';
 
 export default function Login() {
  const Navigate=useNavigate();
- const location = useLocation();
+ //const location = useLocation();
  const dispatch=useAppDispatch();
  const {register,handleSubmit,formState:{isSubmitting,errors,isValid}}=useForm({mode:"onTouched"})
   
 async function Submitform(data:FieldValues) {
     try{
     await dispatch(signInUser(data))
-    Navigate(location.state.from || "/catalog")}catch(err){
+    Navigate("/catalog")}catch(err){
       console.log(err);
       
     }

@@ -25,7 +25,7 @@ console.log(basket);
       to="/checkout"
       variant="contained"
       size="large"
-      fullWidth
+      fullWidth disabled={basket.items.length==0}
       >Checkout</Button>
     </Grid>
     </Grid>

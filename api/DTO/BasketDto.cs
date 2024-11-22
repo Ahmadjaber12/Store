@@ -11,6 +11,10 @@ namespace api.Dto{
 
         public List<BasketItemDto> items{set; get;} 
 
+        public string PaymentIntentId{set; get;}    
+
+        public string ClientSecret { get; set; }
+
 
     }
 }

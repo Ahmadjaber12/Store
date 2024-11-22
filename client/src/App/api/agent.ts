@@ -110,13 +110,17 @@ const orders={
     fetchAddress:()=>requests.get(`account/savedAddress`),
 
 }
+const payments={
+    createPaymentIntent:()=>requests.post("payment",{})
+}
 
 const agent={
     catalog,
     Errors,
     Basket,
     Account,
-    orders
+    orders,
+    payments
 }
 
 export default agent;

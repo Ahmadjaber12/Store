@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<StoreContext>(opt=>
 {opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<PaymentService>();
 builder.Services.AddCors();
 builder.Services.AddIdentityCore<User>().AddRoles<Role>().AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddScoped<TokenServices>();    
